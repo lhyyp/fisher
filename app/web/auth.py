@@ -25,8 +25,12 @@ def login():
     if request.method == "POST" and form.validate():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
-            login_user(user)
-            return jsonify(code="200", mag="登录成功")
+            login_user(user, remember=True)
+            next = request.args.get("next")
+            if next and next.startswith("/"):
+                return jsonify(code="200", mag="登录成功", path=next)
+            else:
+                return jsonify(code="200", mag="登录成功")
         else:
             return jsonify(code="-1", mag="账号或密码错误")
     else:

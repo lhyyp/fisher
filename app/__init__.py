@@ -17,5 +17,7 @@ def create_app():
     register_blueprint(app)
     db.init_app(app)
     login_manager.init_app(app)
+    login_manager.login_view = "web.login"
+
     db.create_all(app=app)
     return app
